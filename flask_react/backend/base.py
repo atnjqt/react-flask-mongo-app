@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 
 api = Flask(__name__)
 
@@ -10,3 +10,10 @@ def my_profile():
     }
 
     return response_body
+
+@api.route('/username/', methods=['GET','POST'])
+def my_username():
+
+    username_value = request.args.get('username_value')
+
+    return jsonify({ 'un': 'your username name is --> {}'.format(username_value) })
