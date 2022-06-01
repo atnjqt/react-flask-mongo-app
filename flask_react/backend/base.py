@@ -11,9 +11,15 @@ def my_profile():
 
     return response_body
 
-@api.route('/username/', methods=['GET','POST'])
+@api.route('/username', methods=['GET','POST'])
 def my_username():
-
     username_value = request.args.get('username_value')
-
-    return jsonify({ 'un': 'your username name is --> {}'.format(username_value) })
+    #console.log(username_value)
+    #return jsonify({ 'un': '{}'.format(username_value) })
+    return username_value
+@api.route('/test')
+def test_api():
+    response_body = {
+        "value" : 'testing...'
+     }
+    return response_body

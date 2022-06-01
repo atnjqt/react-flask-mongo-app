@@ -6,6 +6,7 @@ import './App.css';
 function App() {
 
    // new line start
+   // current state and a function that updates it
   const [profileData, setProfileData] = useState(null)
 
   function getData() {
@@ -14,7 +15,7 @@ function App() {
       url:"/profile",
     })
     .then((response) => {
-      const res =response.data
+      const res = response.data
       setProfileData(({
         profile_name: res.name,
         about_me: res.about}))
@@ -26,6 +27,34 @@ function App() {
         }
     })}
     //end of new line 
+
+  const [firstName, setFirstName] = useState('');
+
+  const [usernameData, setUsernameData] = useState(null)
+
+  function getUsername(un_val){
+    axios({
+      method: "GET",
+      url:"/username",
+      params: {
+        username_value: un_val
+      }
+    })
+    .then((response) => {
+      const res = response.data
+      setUsernameData(({
+        //un: res.un
+        un:res.firstName
+      }))
+      console.log(res)
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })
+  }
 
   return (
     <div className="App">
@@ -44,13 +73,34 @@ function App() {
         </a>
 
         {/* new line start*/}
-        <p>To get your profile details: </p><button onClick={getData}>Click me</button>
+        <p>1. Sample value from Flask backend: </p>
+        <button onClick={getData}>Click me</button>
         {profileData && <div>
               <p>Profile name: {profileData.profile_name}</p>
               <p>About me: {profileData.about_me}</p>
             </div>
         }
          {/* end of new line */}
+         
+         {/* new line start */}
+
+        <p>2. Passing a parameter to backend (enter your firstname / username):</p> 
+        
+        <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} />        
+        {firstName && <div>
+          <button onClick={() => getUsername({firstName})}> Enter</button>
+            {usernameData && <div>
+            flask backend response: {usernameData.un}
+            </div>
+          }
+          </div>
+          }
+         {/* end of new line */}
+
+         {/* new line start */}
+        <p> 3. work on getting username into database & read db scheme (TBD)</p>
+         {/* end of new line */}
+
       </header>
     </div>
   );
