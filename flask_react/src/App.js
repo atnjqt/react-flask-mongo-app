@@ -68,12 +68,36 @@ function App() {
         un:res.firstName
       }))
       console.log(res)
-    }).catch((error) => {
+    })
+    .catch((error) => {
       if (error.response) {
         console.log(error.response)
         console.log(error.response.status)
         console.log(error.response.headers)
         }
+    })
+  }
+
+  const [databaseValues, setDatabaseValues] = useState(null)
+
+  function listDatabaseUsers(){
+    axios({
+      method: "GET",
+      url:"/database"
+    })
+    .then((response) => {
+      const res = response.data
+      setDatabaseValues(res)
+      console.log(res)
+      console.log({databaseValues})
+
+    })
+    .catch((error) => {
+    if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }    
     })
   }
 
@@ -120,12 +144,24 @@ function App() {
          {/* end of new line */}
 
          {/* new line start */}
-        <p> 3. add username to database & read db scheme (TBD)</p>
+        <p> 3. add username to database </p>
         <button onClick={() => postUsername( {firstName})}>Enter</button>
-
-
          {/* end of new line */}
 
+         {/* new line start */}
+
+         
+        <p> 4. read db scheme</p>
+        
+        <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
+        {databaseValues && <div>
+          mongo database collection: {databaseValues.database}
+          </div>
+        }
+
+        <p> 5. delete the db</p>
+
+         {/* end of new line */}
       </header>
     </div>
   );

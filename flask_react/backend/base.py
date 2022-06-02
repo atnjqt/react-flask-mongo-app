@@ -37,6 +37,17 @@ def my_username():
         app.logger.info(db.list_collection_names())
         return jsonify({'result':'post was successful!'})
 
+@app.route('/database')
+def getDatabaseUsers():
+    if request.method == 'GET':
+        items = []
+        for item in db.users.find():
+            # This does not give a very readable output
+            app.logger.info(item)
+            items.append(str(item))
+
+        return jsonify({'database':items})
+        #return response_body
 
 @app.route('/test')
 def test_app():
