@@ -137,29 +137,20 @@ function App() {
 
          {/* new line start */}
 
-        <p>1. (DEMO) Pass a parameter to backend:</p> 
-        
-        <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} />        
-        {/* */}
-        {firstName && <div>
+        <p>1. Enter username value:</p> 
+        <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} /> 
+        {firstName && <div><button onClick={() => postUsername( {firstName})}>Enter</button></div>}       
+        {/*{firstName && <div>
           <button onClick={() => getUsername({firstName})}>Enter</button>
           {usernameData && <div>
             username is: <code>{usernameData.un}</code>
-            </div>
-          }
           </div>
-        }
+          </div>
+        }*/}
          {/* end of new line */}
 
          {/* new line start */}
-        <p>2. add username to database </p>
-        <button onClick={() => postUsername( {firstName})}>Enter</button>
-         {/* end of new line */}
-
-         {/* new line start */}
-
-         
-        <p>3. read db scheme</p>
+        <p>2. read db scheme (click to read updated)</p>
         
         <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
         {databaseValues && <div>
@@ -167,8 +158,9 @@ function App() {
           </div>
         }
 
-        <p> 4. delete the db (TBD)</p>
-        <button onClick={deleteDatabase()}>Delete DB</button>
+        <p> 3. delete the db collection for <code>users</code>? </p>
+        <button onClick={() => deleteDatabase()}>Click here</button>
+        
 
          {/* end of new line */}
       </header>
