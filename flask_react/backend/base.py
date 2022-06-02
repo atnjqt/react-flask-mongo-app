@@ -5,37 +5,35 @@ socket.gethostbyname('localhost')
  
 #client = MongoClient('mongo', 27017)
 client = MongoClient('mongodb://localhost:27017/db')
-db = client.db
+db = client.db # mongo database name is db
 
 app = Flask(__name__)
 
 @app.route('/profile')
 def my_profile():
     response_body = {
-        "name": "Atn Jqt",
-        "about" :"Hello! I'm a sysadmin that loves python and wants to learn more React!"
+        "name":"Atn Jqt",
+        "about":"Hello! I'm a sysadmin that loves python and wants to learn more React!"
     }
-
     return response_body
 
 @app.route('/username', methods=['GET','POST'])
-def my_username():
-    # GET a username from database
+def username_func():
+    # GET a username from database - this was original example to demonstrate back and forth
     if request.method == 'GET':
-        un_val = request.args.get('username_value')
+        username_value = request.args.get('username_value')
+        #return jsonify({'db_value':db.users.find("username_value" : username_value )})
         #console.log(username_value)
         #return jsonify({ 'un': '{}'.format(username_value) })
-        return un_val
+        #return username_value
 
-    # POST a data to database
+    # POST a username to database
     if request.method == 'POST':
         body = request.json
         app.logger.info(body)    
-        #un_val = request.args.get('username_value')
-        # db.users.insert_one({
         db['users'].insert_one(body)
-        app.logger.info(db.list_collection_names())
-        return jsonify({'result':'post was successful!'})
+        #app.logger.info(db.list_collection_names())
+        return jsonify({'result':'HTTP POST was successful!'})
 
 @app.route('/database')
 def getDatabaseUsers():

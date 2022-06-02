@@ -150,19 +150,23 @@ function App() {
          {/* end of new line */}
 
          {/* new line start */}
-        <p>2. read db scheme (click to read updated)</p>
-        
-        <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
-        {databaseValues && <div>
-          <em>{databaseValues.output.map(databasevalue =><div>{databasevalue}</div>)}</em>
-          </div>
+          <p>2. read db scheme (click to read updated)</p>
+          
+          <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
+          {databaseValues && <div>
+            <em>{databaseValues.output.map(databasevalue =><div>{databasevalue}</div>)}</em>
+            </div>
         }
-
-        <p> 3. delete the db collection for <code>users</code>? </p>
-        <button onClick={() => deleteDatabase()}>Click here</button>
-        
-
          {/* end of new line */}
+
+         {/* new line start */}
+          <p> 3. delete the db collection for <code>users</code>? </p>
+          <button onClick={() => deleteDatabase()}>Click here</button>
+         {/* end of new line */}
+
+         <p> 4. facebook oauth login - save access token to db (TBD) </p>
+         ### add facebook ouath login button header... i'm pretty sure the shortterm access token is in the response, which an axios call should POST to flask & then write to collection
+
       </header>
     </div>
   );
