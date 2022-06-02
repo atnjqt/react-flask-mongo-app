@@ -32,6 +32,27 @@ function App() {
 
   const [usernameData, setUsernameData] = useState(null)
 
+  function postUsername(un_val){
+    axios({
+      method: "POST",
+      url:"/username",
+      data: {
+        username_value: un_val['firstName']
+      }
+    })
+    .then((response) => {
+      const res = response.data
+      console.log(res)
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })
+
+  }
   function getUsername(un_val){
     axios({
       method: "GET",
@@ -87,18 +108,22 @@ function App() {
         <p>2. Passing a parameter to backend (enter your firstname / username):</p> 
         
         <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} />        
+        {/* */}
         {firstName && <div>
-          <button onClick={() => getUsername({firstName})}> Enter</button>
-            {usernameData && <div>
+          <button onClick={() => getUsername({firstName})}>Enter</button>
+          {usernameData && <div>
             flask backend response: {usernameData.un}
             </div>
           }
           </div>
-          }
+        }
          {/* end of new line */}
 
          {/* new line start */}
-        <p> 3. work on getting username into database & read db scheme (TBD)</p>
+        <p> 3. add username to database & read db scheme (TBD)</p>
+        <button onClick={() => postUsername( {firstName})}>Enter</button>
+
+
          {/* end of new line */}
 
       </header>

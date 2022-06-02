@@ -16,6 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-backend": "cd backend && .venv/bin/flask run --no-debugger --port=5001",
+    "start-database": "mongod --config /opt/homebrew/etc/mongod.conf",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

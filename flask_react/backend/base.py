@@ -1,25 +1,50 @@
 from flask import Flask, jsonify, request
+from pymongo import MongoClient
+import socket
+socket.gethostbyname('localhost')
+ 
+#client = MongoClient('mongo', 27017)
+client = MongoClient('mongodb://localhost:27017/db')
+db = client.db
 
-api = Flask(__name__)
+app = Flask(__name__)
 
-@api.route('/profile')
+@app.route('/profile')
 def my_profile():
     response_body = {
         "name": "Atn Jqt",
-        "about" :"Hello! I'm a sysadmin that loves python and wants to learn more javascript for compassion app!"
+        "about" :"Hello! I'm a sysadmin that loves python and wants to learn more React!"
     }
 
     return response_body
 
-@api.route('/username', methods=['GET','POST'])
+@app.route('/username', methods=['GET','POST'])
 def my_username():
-    username_value = request.args.get('username_value')
-    #console.log(username_value)
-    #return jsonify({ 'un': '{}'.format(username_value) })
-    return username_value
-@api.route('/test')
-def test_api():
+    # GET a username from database
+    if request.method == 'GET':
+        un_val = request.args.get('username_value')
+        #console.log(username_value)
+        #return jsonify({ 'un': '{}'.format(username_value) })
+        return un_val
+
+    # POST a data to database
+    if request.method == 'POST':
+        body = request.json
+        app.logger.info(body)    
+        #un_val = request.args.get('username_value')
+        # db.users.insert_one({
+        db['users'].insert_one(body)
+        app.logger.info(db.list_collection_names())
+        return jsonify({'result':'post was successful!'})
+
+
+@app.route('/test')
+def test_app():
     response_body = {
         "value" : 'testing...'
      }
     return response_body
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
