@@ -43,10 +43,9 @@ def getDatabaseUsers():
         items = []
         for item in db.users.find():
             # This does not give a very readable output
-            app.logger.info(item)
-            items.append(str(item))
+            items.append(item['username_value'])
 
-        return jsonify({'database':items})
+        return jsonify({'output':items})
         #return response_body
 
 @app.route('/test')

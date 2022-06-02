@@ -88,9 +88,7 @@ function App() {
     .then((response) => {
       const res = response.data
       setDatabaseValues(res)
-      console.log(res)
-      console.log({databaseValues})
-
+      console.log(databaseValues.database)
     })
     .catch((error) => {
     if (error.response) {
@@ -106,37 +104,27 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
+          Edit <code>src/App.js</code> and save to reload... (<a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        >Learn React
+        </a>)
+        
+        <hr></hr>
+        </p>
 
-        {/* new line start*/}
-        <p>1. Sample value from Flask backend: </p>
-        <button onClick={getData}>Click me</button>
-        {profileData && <div>
-              <p>Profile name: {profileData.profile_name}</p>
-              <p>About me: {profileData.about_me}</p>
-            </div>
-        }
-         {/* end of new line */}
-         
          {/* new line start */}
 
-        <p>2. Passing a parameter to backend (enter your firstname / username):</p> 
+        <p>1. (DEMO) Pass a parameter to backend:</p> 
         
         <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} />        
         {/* */}
         {firstName && <div>
           <button onClick={() => getUsername({firstName})}>Enter</button>
           {usernameData && <div>
-            flask backend response: {usernameData.un}
+            username is: <code>{usernameData.un}</code>
             </div>
           }
           </div>
@@ -144,22 +132,23 @@ function App() {
          {/* end of new line */}
 
          {/* new line start */}
-        <p> 3. add username to database </p>
+        <p>2. add username to database </p>
         <button onClick={() => postUsername( {firstName})}>Enter</button>
          {/* end of new line */}
 
          {/* new line start */}
 
          
-        <p> 4. read db scheme</p>
+        <p>3. read db scheme</p>
         
         <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
         {databaseValues && <div>
-          mongo database collection: {databaseValues.database}
+          <em>{databaseValues.output.map(databasevalue =><div>{databasevalue}</div>)}</em>
           </div>
+
         }
 
-        <p> 5. delete the db</p>
+        <p> 5. delete the db (TBD)</p>
 
          {/* end of new line */}
       </header>
