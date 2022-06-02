@@ -48,6 +48,12 @@ def getDatabaseUsers():
         return jsonify({'output':items})
         #return response_body
 
+@app.route('/database_drop')
+def dropDatabase():
+    if request.method == 'GET':
+        db.users.drop()
+        return 'dropped!'
+
 @app.route('/test')
 def test_app():
     response_body = {

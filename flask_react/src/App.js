@@ -7,7 +7,7 @@ function App() {
 
    // new line start
    // current state and a function that updates it
-  const [profileData, setProfileData] = useState(null)
+  /*const [profileData, setProfileData] = useState(null)
 
   function getData() {
     axios({
@@ -27,7 +27,8 @@ function App() {
         }
     })}
     //end of new line 
-
+    */
+    
   const [firstName, setFirstName] = useState('');
 
   const [usernameData, setUsernameData] = useState(null)
@@ -79,7 +80,6 @@ function App() {
   }
 
   const [databaseValues, setDatabaseValues] = useState(null)
-
   function listDatabaseUsers(){
     axios({
       method: "GET",
@@ -98,6 +98,26 @@ function App() {
         }    
     })
   }
+
+  function deleteDatabase(){
+    axios({
+      method: "GET",
+      url:"/database_drop"
+    })
+    .then((response) => {
+      const res = response.data
+      console.log(res)
+    })
+    .catch((error) => {
+    if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }    
+    })
+  }
+
+
 
   return (
     <div className="App">
@@ -145,10 +165,10 @@ function App() {
         {databaseValues && <div>
           <em>{databaseValues.output.map(databasevalue =><div>{databasevalue}</div>)}</em>
           </div>
-
         }
 
-        <p> 5. delete the db (TBD)</p>
+        <p> 4. delete the db (TBD)</p>
+        <button onClick={deleteDatabase()}>Delete DB</button>
 
          {/* end of new line */}
       </header>
