@@ -4,6 +4,8 @@
 
 Sample dev app for testing stuff
 
+![](https://blogger.googleusercontent.com/img/a/AVvXsEhOnTdk9jC7Pa3AS1IP1U2CiYsPid1g5h8bOrqDsrM2iPYCZutHmIrxyId0ep7wzd8TqJGV-UrDLTuPQlFAodg33Km6XkqG6pUPgULh2mUBXb39r6T1Tc_ch7pUHrJ0unr1aEbkXTCXidFe4V6D3Pws8dWP0rstu6NlZ59pe2cm0A0DTk26v_GtiOPbPg=s1033)
+
 ## Super simple example
 
 based on the example here: [https://dev.to/nagatodev/how-to-connect-flask-to-reactjs-1k8i](https://dev.to/nagatodev/how-to-connect-flask-to-reactjs-1k8i)
