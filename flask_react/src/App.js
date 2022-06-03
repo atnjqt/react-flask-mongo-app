@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
+import FacebookLogin from 'react-facebook-login';
 import axios from "axios";
 import logo from './logo.svg';
 import './App.css';
+import FacebookPicture from './Components/FacebookPicture'
 
 function App() {
 
@@ -32,6 +34,11 @@ function App() {
   const [firstName, setFirstName] = useState('');
 
   const [usernameData, setUsernameData] = useState(null)
+  const [databaseValues, setDatabaseValues] = useState(null)
+
+  const [login, setLogin] = useState(false);
+  const [data, setData] = useState({});
+  const [accessToken, setAccessToken] = useState();
 
   function postUsername(un_val){
     axios({
@@ -79,16 +86,16 @@ function App() {
     })
   }
 
-  const [databaseValues, setDatabaseValues] = useState(null)
+
   function listDatabaseUsers(){
     axios({
       method: "GET",
       url:"/database"
     })
     .then((response) => {
-      const res = response.data
+      const res = response
+      console.log(res.data)
       setDatabaseValues(res)
-      console.log(databaseValues.database)
     })
     .catch((error) => {
     if (error.response) {
@@ -98,7 +105,6 @@ function App() {
         }    
     })
   }
-
   function deleteDatabase(){
     axios({
       method: "GET",
@@ -116,28 +122,71 @@ function App() {
         }    
     })
   }
-
-
+  function responseFacebook(response) {
+    console.log('FACEBOOK OAUTH RESPONSE',response);
+    setData(response);
+    /* login boolean for condfitional display */
+    if (response.accessToken) {
+      setAccessToken(response.accessToken);
+      setLogin(true);
+      /**testing, post the access token data response to database*/
+      axios({
+        method: "POST",
+        url:"/username",
+        data:{response}
+      })
+      .then((response) => {
+        const res = response.data
+        console.log(res)
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+          }
+      })
+    } else {
+      setLogin(false);
+    }
+    
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload... (<a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Learn React
-        </a>)
-        
+        <h1 class="welcome"> <strong>Welcome to React-Flask-Mongo Dev App 🦾 ⚡️ 🐊</strong> </h1>
         <hr></hr>
         </p>
 
+          {!login &&
+            <div class='login_button'>
+              <FacebookLogin
+                appId="292301126304936"
+                autoLoad={true}
+                fields="name,email,picture"
+                scope="public_profile, email, user_friends, user_photos, user_birthday"
+                callback={responseFacebook}
+                icon="fa-facebook" />
+            </div>
+          }
+
+          {login && 
+            <div>
+              <h3 class="welcome"> <strong><em>1. May you be well... </em> 😌</strong> </h3>
+              <p> Okay! logged in as <i>Meta Developer Test User</i>: {data.name}</p>
+              <div>
+                <FacebookPicture user_id={'me'} width={'320'} height={'320'} token={accessToken}/>
+              </div> 
+              <hr></hr>
+            </div>
+          }
+
          {/* new line start */}
 
-        <p>1. Enter username value:</p> 
+        <p>1. Enter username value / refresh page for fb access token:</p> 
         <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} /> 
         {firstName && <div><button onClick={() => postUsername( {firstName})}>Enter</button></div>}       
         {/*{firstName && <div>
@@ -153,19 +202,24 @@ function App() {
           <p>2. read db scheme (click to read updated)</p>
           
           <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
-          {databaseValues && <div>
+          {databaseValues && 
+          <div>db vals
+            <em>{databaseValues.data.map(databasevalue =><div>{databasevalue.name} - {databasevalue.email}</div>)}</em>
+            </div>
+          }
+          {/*{databaseValues && 
+            <div>
             <em>{databaseValues.output.map(databasevalue =><div>{databasevalue}</div>)}</em>
             </div>
-        }
-         {/* end of new line */}
+            }
+          end of new line */}
 
          {/* new line start */}
           <p> 3. delete the db collection for <code>users</code>? </p>
           <button onClick={() => deleteDatabase()}>Click here</button>
          {/* end of new line */}
 
-         <p> 4. facebook oauth login - save access token to db (TBD) </p>
-         ### add facebook ouath login button header... i'm pretty sure the shortterm access token is in the response, which an axios call should POST to flask & then write to collection
+         <p> 4. facebook get photos into db collection for user (TBD) </p>
 
       </header>
     </div>

@@ -30,20 +30,22 @@ def username_func():
     # POST a username to database
     if request.method == 'POST':
         body = request.json
-        app.logger.info(body)    
-        db['users'].insert_one(body)
-        #app.logger.info(db.list_collection_names())
+        #app.logger.info(body['response']['name'])
+        #db['users'].insert_one(body)
+        # trying to just update based on name if already in collection
+        key = {'name':body['response']['name']}
+        db['users'].replace_one(key, body, upsert=True); 
         return jsonify({'result':'HTTP POST was successful!'})
 
 @app.route('/database')
 def getDatabaseUsers():
     if request.method == 'GET':
         items = []
-        for item in db.users.find():
-            # This does not give a very readable output
-            items.append(item['username_value'])
-
-        return jsonify({'output':items})
+        cursor = db.users.find({})
+        for document in cursor: 
+            items.append(document['response'])
+            
+        return jsonify(items)
         #return response_body
 
 @app.route('/database_drop')
