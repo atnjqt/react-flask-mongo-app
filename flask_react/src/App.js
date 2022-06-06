@@ -4,6 +4,9 @@ import axios from "axios";
 import logo from './logo.svg';
 import './App.css';
 import FacebookPicture from './Components/FacebookPicture'
+//import FacebookFriendsPicture from './Components/FacebookFriendsPicture'
+import FacebookGetPhotos from './Components/FacebookGetPhotos'
+
 
 function App() {
 
@@ -219,7 +222,17 @@ function App() {
           <button onClick={() => deleteDatabase()}>Click here</button>
          {/* end of new line */}
 
-         <p> 4. facebook get photos into db collection for user (TBD) </p>
+        {login && 
+        <div>
+          <p class="welcome"> 4. facebook get photos into db collection for user (TBD)
+          </p>
+           Click <a href={"https://graph.facebook.com/me/photos/uploaded?access_token=" + accessToken} target="_blank">here</a>
+            <div>
+              <FacebookGetPhotos token={accessToken}/>
+            </div>
+            <hr></hr>
+        </div>
+        }
 
       </header>
     </div>
