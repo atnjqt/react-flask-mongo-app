@@ -202,6 +202,25 @@ function App() {
       }
     } 
 
+  function displayFacebookMePhotos() {
+    axios({
+      method: "GET",
+      url:"/user_photos"
+      })
+      .then((response) => {
+        const res = response
+        console.log(res.data)
+        //setDatabaseValues(res)
+      })
+      .catch((error) => {
+      if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+          }    
+      })
+    }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -285,6 +304,8 @@ function App() {
           {/*  Click <a href={"https://graph.facebook.com/me/photos?type=uploaded&access_token=" + accessToken} target="_blank">here</a>*/}
             <div>
             {/*  <FacebookGetPhotos token={accessToken}/> */}
+            <button onClick={() => displayFacebookMePhotos()}>Click here</button>
+
             </div>
             <hr></hr>
         </div>

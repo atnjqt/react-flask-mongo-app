@@ -72,7 +72,18 @@ def add_user_me_photos():
                 "$set" : body['response']
             }
         )
-    return body['response']
+        return body['response']
+    
+    if request.method == 'GET':
+        items = []
+        # probably need to pass access token?
+        cursor = db.users.find({})
+        for document in cursor: 
+            app.logger.info(document['data'])
+            items.append(document['data'])
+            
+        return jsonify(items)
+        #return response_body
 
 @app.route('/test')
 def test_app():
