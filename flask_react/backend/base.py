@@ -54,6 +54,27 @@ def dropDatabase():
         db.users.drop()
         return 'dropped!'
 
+@app.route('/user_photos', methods=['GET','POST'])
+def add_user_me_photos():
+    # POST a username to database
+    if request.method == 'POST':
+        body = request.json
+        #app.logger.info(body['response'])
+        #db['users'].insert_one(body)
+        #app.logger.info(len(body['response']['data']))
+        obj_id = db['users'].find({},{ "accessToken":body['accessToken']}).distinct('_id')
+        app.logger.info('obj_id is')
+        app.logger.info(obj_id[0])
+        db['users'].update_one(
+            {
+                '_id': obj_id[0]
+            },
+            {
+                "$set" : body['response']
+            }
+        )
+    return body['response']
+
 @app.route('/test')
 def test_app():
     response_body = {

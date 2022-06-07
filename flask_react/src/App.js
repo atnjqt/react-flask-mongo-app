@@ -88,8 +88,6 @@ function App() {
         }
     })
   }
-
-
   function listDatabaseUsers(){
     axios({
       method: "GET",
@@ -152,8 +150,57 @@ function App() {
     } else {
       setLogin(false);
     }
-    
   }
+
+  //const [photoData, setPhotoData] = useState(false)
+  const [photoData, setPhotosData] = useState();
+
+  function responseFacebookMePhotos(response) {
+      console.log('facebook me photos uploaded',response);
+      //setPhotoData(response)
+      if (login) {
+
+        // try to get photos, keep it simple for now on the frontend
+        //async function fetchFacebookGetPhotos () {
+          try{
+            axios
+                .get(`https://graph.facebook.com/me/photos/?fields=images&type=uploaded&access_token=${accessToken}`)
+                .then((resp) => {
+                    console.log('TESTING to get photo IDs...')
+                    console.log(resp.data.data)
+                    setPhotosData(resp.data)
+                })
+          } catch (err) {
+              console.log('error', err)
+          }
+        
+
+        // manually call the fecth function 
+        //fetchFacebookGetPhotos();
+
+        // with PhotoData now set, try and insert into collection?
+        axios({
+          method: "POST",
+          url:"/user_photos",
+          data:{'response':photoData,
+                'accessToken':accessToken}
+        })
+        .then((response) => {
+          const res = response.data
+          console.log(res)
+          //setPhotoData(true);
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+            }
+        })
+      } else {
+        console.log('login is FALSE',response)
+      }
+    } 
 
   return (
     <div className="App">
@@ -207,7 +254,7 @@ function App() {
           <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
           {databaseValues && 
           <div>db vals
-            <em>{databaseValues.data.map(databasevalue =><div>{databasevalue.name} - {databasevalue.email}</div>)}</em>
+            <em>{databaseValues.data.map(databasevalue =><div>{databasevalue.accessToken} - {databasevalue.email}</div>)}</em>
             </div>
           }
           {/*{databaseValues && 
@@ -226,11 +273,23 @@ function App() {
         <div>
           <p class="welcome"> 4. facebook get photos into db collection for user (TBD)
           </p>
-           Click <a href={"https://graph.facebook.com/me/photos/uploaded?access_token=" + accessToken} target="_blank">here</a>
+          {/*  Click <a href={"https://graph.facebook.com/me/photos?type=uploaded&access_token=" + accessToken} target="_blank">here</a>*/}
             <div>
-              <FacebookGetPhotos token={accessToken}/>
+            {/*  <FacebookGetPhotos token={accessToken}/> */}
             </div>
             <hr></hr>
+        </div>
+        }
+
+        {login &&
+        <div>
+          {/* new line start */}
+          <p> 5. insert facebook photos to db collection </p>
+          <button onClick={() => responseFacebookMePhotos()}>Click here</button>
+         {/* end of new line */}
+
+
+
         </div>
         }
 
