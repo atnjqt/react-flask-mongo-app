@@ -61,10 +61,9 @@ def add_user_me_photos():
         body = request.json
         #app.logger.info(body['response'])
         #db['users'].insert_one(body)
-        #app.logger.info(len(body['response']['data']))
         obj_id = db['users'].find({},{ "accessToken":body['accessToken']}).distinct('_id')
-        app.logger.info('obj_id is')
-        app.logger.info(obj_id[0])
+        #app.logger.info('obj_id is')
+        app.logger.info(body)
         db['users'].update_one(
             {
                 '_id': obj_id[0]

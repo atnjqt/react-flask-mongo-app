@@ -153,7 +153,8 @@ function App() {
   }
 
   //const [photoData, setPhotoData] = useState(false)
-  const [photoData, setPhotosData] = useState();
+  //const [photoData, setPhotosData] = useState();
+  const [photosSaved, setphotosSaved] = useState(false)
 
   function responseFacebookMePhotos(response) {
       console.log('facebook me photos uploaded',response);
@@ -168,35 +169,34 @@ function App() {
                 .then((resp) => {
                     console.log('TESTING to get photo IDs...')
                     console.log(resp.data.data)
-                    setPhotosData(resp.data)
+                    //setPhotosData(resp.data)
+                    
+                    // probably should not next an axios inside an axios.then
+                    // with PhotoData now set, try and insert into collection?
+                    axios({
+                      method: "POST",
+                      url:"/user_photos",
+                      data:{'response':resp.data,
+                            'accessToken':accessToken}
+                    })
+                    .then((response) => {
+                      const res = response.data
+                      //console.log(res)
+                      setphotosSaved(true)
+                      //setPhotoData(true);
+                    })
+                    .catch((error) => {
+                      if (error.response) {
+                        console.log(error.response)
+                        console.log(error.response.status)
+                        console.log(error.response.headers)
+                        }
+                    })
                 })
           } catch (err) {
               console.log('error', err)
           }
-        
 
-        // manually call the fecth function 
-        //fetchFacebookGetPhotos();
-
-        // with PhotoData now set, try and insert into collection?
-        axios({
-          method: "POST",
-          url:"/user_photos",
-          data:{'response':photoData,
-                'accessToken':accessToken}
-        })
-        .then((response) => {
-          const res = response.data
-          console.log(res)
-          //setPhotoData(true);
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response)
-            console.log(error.response.status)
-            console.log(error.response.headers)
-            }
-        })
       } else {
         console.log('login is FALSE',response)
       }
@@ -265,31 +265,28 @@ function App() {
           end of new line */}
 
          {/* new line start */}
-          <p> 3. delete the db collection for <code>users</code>? </p>
+          <p> 3. delete the db collection <code>users</code>? </p>
           <button onClick={() => deleteDatabase()}>Click here</button>
          {/* end of new line */}
 
-        {login && 
+        {login &&
         <div>
-          <p class="welcome"> 4. facebook get photos into db collection for user (TBD)
-          </p>
+          {/* new line start */}
+          <p> 4. insert facebook photos to db collection </p>
+          <button onClick={() => responseFacebookMePhotos()}>Click here</button>
+         {/* end of new line */}
+        </div>
+        }
+
+
+        {login && photosSaved && 
+        <div>
+          <p class="welcome"> 5. read facebook photos from db collection</p>
           {/*  Click <a href={"https://graph.facebook.com/me/photos?type=uploaded&access_token=" + accessToken} target="_blank">here</a>*/}
             <div>
             {/*  <FacebookGetPhotos token={accessToken}/> */}
             </div>
             <hr></hr>
-        </div>
-        }
-
-        {login &&
-        <div>
-          {/* new line start */}
-          <p> 5. insert facebook photos to db collection </p>
-          <button onClick={() => responseFacebookMePhotos()}>Click here</button>
-         {/* end of new line */}
-
-
-
         </div>
         }
 
