@@ -6,6 +6,7 @@ import './App.css';
 import FacebookPicture from './Components/FacebookPicture'
 //import FacebookFriendsPicture from './Components/FacebookFriendsPicture'
 import FacebookGetPhotos from './Components/FacebookGetPhotos'
+import FacebookPhotos from './Components/FacebookPhotos'
 
 
 function App() {
@@ -202,7 +203,10 @@ function App() {
       }
     } 
 
-  function displayFacebookMePhotos() {
+  const [photosData, setPhotosData] = useState([]);
+
+  function getFacebookMePhotos() {
+    // get the image ids
     axios({
       method: "GET",
       url:"/user_photos"
@@ -210,7 +214,8 @@ function App() {
       .then((response) => {
         const res = response
         console.log(res.data)
-        //setDatabaseValues(res)
+        // should return an array of image ids
+        setPhotosData(res.data)
       })
       .catch((error) => {
       if (error.response) {
@@ -220,6 +225,26 @@ function App() {
           }    
       })
     }
+
+  const [photosDataURLs, setPhotosDataURLs] = useState();
+
+  function getFacebookMePhotoURLs(photo_id) {
+    console.log(photo_id)
+    // pass image ids to get img url for display
+    try{
+      axios
+          .get(`https://graph.facebook.com/${photo_id}/?access_token=${accessToken}&fields=webp_images`)
+          .then((resp) => {
+              console.log('TESTING FOR PHOTOS DISPLAY')
+              console.log(resp.data)
+              // take only first of the various different image sizes turned
+              setPhotosDataURLs(resp.data.webp_images[0])
+          })
+    } catch (err) {
+        console.log('error', err)
+    }
+  }
+
 
   return (
     <div className="App">
@@ -244,7 +269,7 @@ function App() {
 
           {login && 
             <div>
-              <h3 class="welcome"> <strong><em>1. May you be well... </em> 😌</strong> </h3>
+              <h3 class="welcome"> <strong><em>May you be well...</em> 😌</strong> </h3>
               <p> Okay! logged in as <i>Meta Developer Test User</i>: {data.name}</p>
               <div>
                 <FacebookPicture user_id={'me'} width={'320'} height={'320'} token={accessToken}/>
@@ -255,10 +280,10 @@ function App() {
 
          {/* new line start */}
 
-        <p>1. Enter username value / refresh page for fb access token:</p> 
+        {/*<p>1. Enter username value / refresh page for fb access token:</p> 
         <input type='text' name="fn" onChange={e => setFirstName(e.target.value)} /> 
         {firstName && <div><button onClick={() => postUsername( {firstName})}>Enter</button></div>}       
-        {/*{firstName && <div>
+        {firstName && <div>
           <button onClick={() => getUsername({firstName})}>Enter</button>
           {usernameData && <div>
             username is: <code>{usernameData.un}</code>
@@ -268,7 +293,7 @@ function App() {
          {/* end of new line */}
 
          {/* new line start */}
-          <p>2. read db scheme (click to read updated)</p>
+          <p>1. Read db.users collection</p>
           
           <button onClick={() => listDatabaseUsers()}>Show DB Users</button>
           {databaseValues && 
@@ -284,31 +309,35 @@ function App() {
           end of new line */}
 
          {/* new line start */}
-          <p> 3. delete the db collection <code>users</code>? </p>
+          <p> 2. (Optional) Delete the db collection <code>users</code>? </p>
           <button onClick={() => deleteDatabase()}>Click here</button>
          {/* end of new line */}
 
         {login &&
         <div>
           {/* new line start */}
-          <p> 4. insert facebook photos to db collection </p>
+          <p> 3. insert facebook photo ids to db collection</p>
           <button onClick={() => responseFacebookMePhotos()}>Click here</button>
          {/* end of new line */}
         </div>
         }
 
 
-        {login && photosSaved && 
+        {login && photosSaved &&
         <div>
-          <p class="welcome"> 5. read facebook photos from db collection</p>
+          <p> 4. read facebook photos from db collection</p>
           {/*  Click <a href={"https://graph.facebook.com/me/photos?type=uploaded&access_token=" + accessToken} target="_blank">here</a>*/}
-            <div>
             {/*  <FacebookGetPhotos token={accessToken}/> */}
-            <button onClick={() => displayFacebookMePhotos()}>Click here</button>
-
-            </div>
-            <hr></hr>
+          <button onClick={() => getFacebookMePhotos()}>Click here</button>
+          <hr></hr>
         </div>
+        }
+        
+      {login && photosSaved && photosData &&
+        <div class="container">
+          <FacebookGetPhotos token={accessToken} />
+        </div>
+        
         }
 
       </header>
